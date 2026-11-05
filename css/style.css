@@ -1,0 +1,102 @@
+.app-header {
+    min-height: 72px;
+}
+
+.app-brand {
+    min-width: 0;
+}
+
+.app-logo {
+    width: 84px;
+    height: 84px;
+    object-fit: contain;
+}
+
+.smaller{
+    font-size:small;
+}
+
+
+.loader {
+  --color-1: rgba(255, 255, 255, 0.15);
+  --color-2: #0e7ff8;
+  --size: 1px;
+
+  width: 100%;
+  height: calc(4.8 * var(--size));
+  display: inline-block;
+  position: relative;
+  background: var(--color-1);
+  overflow: hidden;
+}
+.loader::after {
+  content: '';
+  width: calc(192 * var(--size));
+  height: calc(4.8 * var(--size));
+  background: var(--color-2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  animation: animloader 2s linear infinite;
+}
+
+@keyframes animloader {
+  0% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    left: 100%;
+    transform: translateX(0%);
+  }
+}
+
+@media (max-width: 767.98px) {
+    .table thead { display: none; }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td { display: block; width: 100%; }
+
+    .table tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--bs-border-color);
+        border-radius: .5rem;
+        padding: .5rem;
+    }
+
+    .table td {
+        border: 0;
+        padding: .25rem 0;
+        overflow-wrap: anywhere;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        font-size: .75rem;
+        color: var(--bs-secondary-color);
+    }
+
+    .accordion-button {
+        flex-direction: column;     /* Datum oben, Betreff darunter */
+        align-items: flex-start;    /* linksbündig */
+    }
+
+    .accordion-button .mail-sep {
+        display: none;              /* " - " ausblenden */
+    }
+
+    .accordion-button .mail-date {
+        font-size: .8rem;
+        opacity: .75;               /* optional */
+    }
+
+    .accordion-button .mail-subject {
+        overflow-wrap: anywhere;
+    }
+
+}

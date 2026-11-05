@@ -1,0 +1,14 @@
+{
+    "require": {
+        "twbs/bootstrap": "5.3.3",
+        "webklex/php-imap": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "netzgrenze\\": "src/"
+        }
+        ,"classmap": [
+            "src/"
+        ]
+    }
+}

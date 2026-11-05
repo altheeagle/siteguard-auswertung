@@ -1,0 +1,26 @@
+<script>
+  let foldername = "{{foldername}}";
+</script>
+
+<header class="app-header d-flex align-items-center justify-content-between gap-3 py-3 mb-4 border-bottom">
+  <a class="app-brand d-flex align-items-center gap-3 text-decoration-none" href="/">
+    <img src="img/logo.png" alt="" class="app-logo">
+    <span class="h1 mb-0 text-body">{{appname}}</span>
+  </a>
+  <a class="btn btn-outline-secondary btn-sm flex-shrink-0" href="/logout">Abmelden</a>
+</header>
+
+{{sessionMsg}}
+
+<main>
+  <div class="mb-4">
+    <h1 class="h3 mb-1">Sicherheitsmeldungen</h1>
+    <p class="text-body-secondary mb-0">Übersicht der SiteGuard-Meldungen aus dem Posteingang.</p>
+  </div>
+
+  {{siteguardMails}}
+</main>
+
+<footer class="app-footer mt-5 pt-3 border-top text-body-secondary small">
+  Made with 🧡 and help from 🤖<span>Version 1.0</span>
+</footer>

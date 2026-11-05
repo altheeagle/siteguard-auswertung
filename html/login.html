@@ -1,0 +1,34 @@
+
+<header class="app-header d-flex align-items-center justify-content-between gap-3 py-3 mb-4 border-bottom">
+  <a class="app-brand d-flex align-items-center gap-3 text-decoration-none" href="/">
+    <img src="img/logo.png" alt="" class="app-logo">
+    <span class="h1 mb-0 text-body">{{appname}}</span>
+  </a>
+</header>
+
+<div class="card">
+    <div class="card-header">
+        Bitte mit den Zugangsdaten für das E-Mailpostfach anmelden in dem die Siteguard E-Mail liegen.<br>
+        Das Passwort wird nicht gespeichert* und nur für die Abfrage der E-Mails verwendet.
+    </div>
+    <div class="card-body">
+        <form action="/login" method="POST">
+            <div class="mb-3">
+                <label for="username" class="form-label">E-Mail</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="name@example.com" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Passwort</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="••••••••" required>
+            </div>
+            <div class="mb-3 d-none" id="passwortError"></div>
+            <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+            <div class="d-grid">
+                <button type="submit" name="login" class="btn btn-primary">Anmelden</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+<p class="smaller">* da während der Session mehrfach auf das Postfach zugegriffen wird muss das Passwort gespeichert werden. Es wird temporär und verschlüsselt gespeichert. Der Schlüssel wird getrennt davon aufbewahrt.</p>
+<p>Strato ist ein Markenzeichen der <a href="https://www.strato.de/" target="_blank">STRATO GmbH</a></p>
