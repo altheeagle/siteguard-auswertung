@@ -247,7 +247,24 @@ async function mailAuditDone(id) {
         if (result.nextToken && metaTag) {
             metaTag.setAttribute('content', result.nextToken);
         }
-        document.querySelector('.accordion-item[data-mail-id="' + id + '"]').remove();
 
+        removeAccordionElementByID(id);
 
 };
+
+function removeAccordionElementByID(id){
+    document.querySelector('.accordion-item[data-mail-id="' + id + '"]').remove();
+
+    if (document.querySelectorAll('.accordion-item').length == 0){
+        const status = document.createElement("div");
+        status.classList.add("alert");
+        status.classList.add("alert-success");
+        status.setAttribute("role","alert");
+        status.innerText = "Keine SiteGuard Mails im Posteingang vorhanden.";
+
+        document.getElementById("siteguardmails").replaceWith(status);
+
+
+    }
+
+}

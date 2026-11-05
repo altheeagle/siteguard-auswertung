@@ -282,7 +282,7 @@ class content {
 
     if (count($mails) == 0){
         return '<div class="alert alert-success" role="alert">
-    Im Posteingang liegen keine SiteGuard Mails.
+    Keine SiteGuard Mails im Posteingang vorhanden.
 </div>';
     }
 
