@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Existierende Dateien und Verzeichnisse (CSS, JS, Bilder, ...) direkt ausliefern
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Alles andere an index.php übergeben
+RewriteRule ^ index.php [L]
