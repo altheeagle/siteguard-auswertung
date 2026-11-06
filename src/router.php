@@ -16,6 +16,7 @@ class router {
             $imap = new \netzgrenze\imap();
             $imap->logout();
             header("Location: /");
+            \session_destroy();
             exit();
         }
 
