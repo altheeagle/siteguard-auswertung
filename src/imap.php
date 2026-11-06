@@ -226,6 +226,15 @@ use Webklex\PHPIMAP\ClientManager;
             $folderName = 'INBOX<delimiter>' . $this->config["foldername"];
             $folderName = $this->resolveFolderName($folderName);
 
+            if ($this->config->marAsRead){
+                try {
+                    $message->setFlag('Seen');
+                } catch (\Exception $e) {
+                    $_SESSION["msg"][] = "Fehler: " . $e->getMessage();
+                    return false;
+                }
+            }
+
             try {
                 $message->move($folderName);
                 return true;
