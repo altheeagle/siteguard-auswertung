@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", (event) => {
 
+    document.addEventListener('click', e => {
+        if (e.target.matches('button[type="submit"]')){
+            document.getElementById("fsloader").classList.remove("hidden");
+        }
+
+    })
+
     document.addEventListener("show.bs.collapse", async function (e) {
         if (e.target.getAttribute("data-loaded") === "true") {
             return;
