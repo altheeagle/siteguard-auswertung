@@ -25,6 +25,43 @@ use Webklex\PHPIMAP\ClientManager;
                 }
             }
 
+            if ($this->config["host"] === ""){
+                $imapconfig["accounts"]["default"]["host"] = (string)$_SESSION["host"];
+            }
+
+            if ($this->config["port"] === ""){
+                $imapconfig["accounts"]["default"]["port"] = (int)$_SESSION["port"];
+            }
+
+            if ($this->config["encryption"] === ""){
+                $imapconfig["accounts"]["default"]["encryption"] = \mb_strtolower((string)$_SESSION["encryption"]);
+            }
+
+            // Übernahme der Konfigurationsparamater aus der config falls gesetzt
+            if ($this->config["validate_cert"] === ""){
+                $imapconfig["accounts"]["default"]["validate_cert"] = (bool)$this->config["validate_cert"];
+            }
+
+            if ($this->config["rfc"] === ""){
+                $imapconfig["accounts"]["default"]["rfc"] = (string)$this->config["rfc"];
+            }
+
+            if (is_null($this->config["proxy"]["socket"])){
+                $imapconfig["accounts"]["default"]["proxy"]["socket"] = (string)$this->config["proxy"]["socket"];
+            }
+
+            if (is_null($this->config["proxy"]["request_fulluri"])){
+                $imapconfig["accounts"]["default"]["proxy"]["request_fulluri"] = (bool)$this->config["proxy"]["request_fulluri"];
+            }
+
+            if (is_null($this->config["proxy"]["username"])){
+                $imapconfig["accounts"]["default"]["proxy"]["username"] = (string)$this->config["proxy"]["username"];
+            }
+
+            if (is_null($this->config["proxy"]["password"])){
+                $imapconfig["accounts"]["default"]["proxy"]["password"] = (string)$this->config["proxy"]["password"];
+            }
+
             $imapconfig["accounts"]["default"]["username"] = $username;
             $imapconfig["accounts"]["default"]["password"] = $password;
 

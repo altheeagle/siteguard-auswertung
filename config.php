@@ -1,30 +1,59 @@
 <?php
-
-	/*
-		Change here the IMAP-Server Details and the Folder to move
-		audited Mails.
-	*/
-
-
-
-    $imapconfig["accounts"]["default"]["host"] = "imap.strato.de";
-    $imapconfig["accounts"]["default"]["port"] = 993;
-    $imapconfig["accounts"]["default"]["protocol"] = "imap";
-    $imapconfig["accounts"]["default"]["encryption"] = "ssl";
-    $imapconfig["accounts"]["default"]["validate_cert"] = true;
-    $imapconfig["accounts"]["default"]["username"] = "";
-    $imapconfig["accounts"]["default"]["password"] = "";
-    $imapconfig["accounts"]["default"]["authentication"] = null;
-    $imapconfig["accounts"]["default"]["rfc"] = "RFC822";
-    $imapconfig["accounts"]["default"]["proxy"]["socket"] = null;
-    $imapconfig["accounts"]["default"]["proxy"]["request_fulluri"] = false;
-    $imapconfig["accounts"]["default"]["proxy"]["username"] = null;
-    $imapconfig["accounts"]["default"]["proxy"]["password"] = null;
-    $imapconfig["accounts"]["default"]["timeout"] = 30;
-    $imapconfig["accounts"]["default"]["extensions"] = [];
-
     return[
-        "foldername" => "SiteGuard",
-        "from" => "siteguard@strato.de"
+        // Der Ordner in dem die bearbeiteten SiteGuard Mails
+        // abgelegt werden. Falls der Ordner nicht vorhanden ist
+        // wird er angelegt.
+
+        // <delimiter> ersetzt das serverspezifische Trenn-
+        // zeichen und muss genau so eingesetzt werden
+        // Beispiele:
+        //
+        //  "foldername" => "SiteGuard",
+        //      Der Ordner "SiteGuard" wird als Ordner auf
+        //      der Ebene des Posteingang angelegt
+        //
+        //  "foldername" => "INBOX<delimiter>SiteGuard",
+        //      Der Ordner "SiteGuard" wird als
+        //      Unterordner des Posteingangs gesetzt
+        //  "foldername" => "INBOX<delimiter>Strato<delimiter>SiteGuard",
+        //      Der Ordner "SiteGuard" wird als Posteingang/Webhosting/SiteGuard
+        //      angelegt
+        //
+
+
+        "foldername" => "Strato2<delimiter>SiteGuard",
+
+        // Sollen die abgelegten Mails als gelesen markiert werden
+        "marAsRead" => true,
+
+        // Hier können die Serverdaten eingetragen werden.
+        // Falls die Werte nicht gefüllt sind, wird nach
+        // Autoconfig Werten gesucht
+        "host" => "",
+        "port" => "",
+        "encryption" => "",
+
+        // Einstellungen für den Proxyzugriff auf den IMAP Server
+        "proxy" => [
+            "socket" => null,
+            "request_fulluri" => false,
+            "username" => null,
+            "password" => null,
+
+        ],
+
+        // Zertifikatsprüfung mit false deaktivieren
+        "validate_cert" => true, // true (default) oder false
+
+        // ----------------------------------------------------
+        //  Diese Einstellungen müssen in
+        //  der Regel nicht geändert werden
+        // ----------------------------------------------------
+
+        "rfc" => "RFC822",
+        "timeout" => 30,
+
+        // Absender der Sitegurad Mails
+        "from" => "siteguard@strato.de",
     ];
 ?>
