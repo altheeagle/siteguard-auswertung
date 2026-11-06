@@ -88,7 +88,7 @@ use Webklex\PHPIMAP\ClientManager;
             if (!isset($_SESSION['username'])) {
                 self::storeCredentials($this->username, $this->password);
             }
-            $this->checkIfFolderExists('INBOX<delimiter>' . $this->config["foldername"], true);
+            $this->checkIfFolderExists($this->config["foldername"], true);
             return true;
         }
 
@@ -110,29 +110,51 @@ use Webklex\PHPIMAP\ClientManager;
             if (!$this->client) {
                 throw new \Exception("IMAP client is not connected.");
             }
+
             $folderName = $this->resolveFolderName($folderName);
             $folder = $this->client->getFolderByPath($folderName);
             if ($folder !== null) {
                 return true;
             }
-            if ($createIfNotExists) {
-                try {
-                    $this->client->createFolder($folderName, false);
-                    // Frisch laden und abonnieren
-                    $folder = $this->client->getFolderByPath($folderName);
-                    if ($folder !== null) {
-                        $folder->subscribe(); // <- der entscheidende Schritt
-                    }
-
-                    $_SESSION["msg"][] = "Der IMAP-Ordner '$folderName' wurde erstellt und abonniert.";
-                    return true;
-                } catch (\Exception $e) {
-                    $_SESSION["msg"][] = "Fehler: " . $e->getMessage();
-                    return false;
-                }
+            if (!$createIfNotExists) {
+                return false;
             }
-            return false;
+
+            try {
+                $delimiter = $this->getDelimiter();
+                $parts = explode($delimiter, $folderName);
+                $path = '';
+
+                foreach ($parts as $part) {
+                    $path = ($path === '') ? $part : $path . $delimiter . $part;
+
+                    $current = $this->client->getFolderByPath($path);
+                    if ($current === null) {
+                        $this->client->createFolder($path, false);
+                        $current = $this->client->getFolderByPath($path);
+                    }
+                    if ($current !== null) {
+                        $current->subscribe();
+                    }
+                }
+
+                $_SESSION["msg"][] = "Der IMAP-Ordner '$folderName' wurde erstellt und alle Ebenen abonniert.";
+                return true;
+            } catch (\Exception $e) {
+                $_SESSION["msg"][] = "Fehler: " . $e->getMessage();
+                return false;
+            }
         }
+
+        private function getDelimiter(): string {
+            $inbox = $this->client->getFolderByPath('INBOX');
+            return $inbox->delimiter ?? '.';
+        }
+
+        private function resolveFolderName(string $folderName): string {
+            return str_replace('<delimiter>', $this->getDelimiter(), $folderName);
+        }
+
 
 
 
@@ -151,9 +173,7 @@ use Webklex\PHPIMAP\ClientManager;
             $query->leaveUnread();
             $query->setFetchOrder("desc");
 
-
             $messages = $query->from($this->config["from"])->get();
-
 
             $subjects = [];
             foreach ($messages as $message){
@@ -217,12 +237,6 @@ use Webklex\PHPIMAP\ClientManager;
 
         }
 
-        private function resolveFolderName(string $folderName): string{
-            $inbox = $this->client->getFolderByPath('INBOX');
-            $delimiter = $inbox->delimiter ?? '.';
-
-            return str_replace('<delimiter>', $delimiter, $folderName);
-        }
 
 
         private static function storeCredentials(string $username, string $password): void {
