@@ -39,7 +39,7 @@ class utils {
      * @return void
      */
     public static function clog($value){
-        file_put_contents( "php://stdout",$value);
+        file_put_contents( "php://stdout","\n" . $value . "\n");
     }
 
 }
