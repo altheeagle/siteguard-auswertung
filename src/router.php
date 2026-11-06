@@ -6,7 +6,7 @@ class router {
 
         if ($path == ''){
             if (isset($_SESSION['username'])){
-                return \netzgrenze\content::makeStartpage();
+                return \netzgrenze\content::makeMainpage();
             } else {
                 return \netzgrenze\content::makeLogin();
             }
