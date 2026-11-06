@@ -54,7 +54,7 @@ class content {
 		}
 
 
-		$content = '<div class="container">' . $content . '</div>' . PHP_EOL;
+		$content = '<div class="container">' . $content . PHP_EOL;
 
 
 		if ($fields == null){
@@ -83,6 +83,7 @@ class content {
 			file_get_contents('html/header.html')
 			. $content
 			. file_get_contents('html/footer.html')
+			. '</div>' . PHP_EOL
 			,$fields);
 
 
