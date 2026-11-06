@@ -23,6 +23,28 @@
             </div>
             <div class="mb-3 d-none" id="passwortError"></div>
             <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+            <details class="mb-3" {{opendetails}}>
+                <summary>Verbindungsinformationen<br><span class="smaller">(Eingabe nur erforderlich wenn diese nicht automatisch ermittelt werden können)</span></summary>
+                    <div>
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <label for="host" class="form-label">Hostname</label>
+                                <input type="text" class="form-control" name="host" id="host" placeholder="imap.example.com">
+                            </div>
+                            <div class="col-4">
+                                <label for="port" class="form-label">Port</label>
+                                <input type="text" class="form-control" name="port" id="port" placeholder="993">
+                            </div>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="encryption" checked>
+                            <label class="form-check-label" for="encryption">Verschlüsselte Verbindung</label>
+                        </div>
+                    </div>
+
+
+            </details>
+
             <div class="d-grid">
                 <button type="submit" name="login" class="btn btn-primary">Anmelden</button>
             </div>

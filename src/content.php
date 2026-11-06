@@ -279,6 +279,13 @@ class content {
     public static function makeLogin(){
         $content = file_get_contents('html/login.html');
         $fields["csrf_token"] = $_SESSION["csrf_token"];
+
+		$opendetails = '';
+		if ($_SESSION["showServerConfigOptions"]){
+			$opendetails = 'open';
+		}
+
+		$fields["opendetails"] = $opendetails;
         return \netzgrenze\content::composePage($content, $fields);
     }
 

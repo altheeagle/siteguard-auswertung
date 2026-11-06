@@ -28,7 +28,6 @@ class router {
             $actions = \netzgrenze\content::body2Array($mail["body"]);
 
             return json_encode($actions);
-
         }
 
     }
@@ -36,17 +35,65 @@ class router {
     public static function POST(string $path, array $post){
 
         if ($path == 'login'){
-
-            $imap = new \netzgrenze\imap($post['username'], $post['password']);
-
             if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
                 http_response_code(405); // Oder 403 Forbidden
                 die('Ungültiger CSRF-Token!');
             }
 
+            $config = require "config.php";
+
+            \netzgrenze\utils::clog("$post: " . \json_encode($post));
+
+            // E-Mail Server Daten ermitteln
+            if (empty($_SESSION["host"]) && empty($config["host"]) && empty($post["host"])) {
+                \netzgrenze\utils::clog("Autoconfig wird gesucht");
+                $emailserver = \netzgrenze\imap::getAutoconfigData($post['username']);
+                \netzgrenze\utils::clog(\json_encode($emailserver));
+                if (!$emailserver){
+                    $_SESSION["showServerConfigOptions"] = true;
+                    return \netzgrenze\content::showError([
+                            'errorTitle' => 'Login fehlgeschlagen',
+                            'errorMessage' => 'Für diese E-Mailadresse konnten keine Autoconfig Einträge gefunden werden. Sie haben nun zwei Optionen:
+                                                <ul>
+                                                    <li>Mit <a href="/">Zurück</a> kommen Sie auf die Login Seite. Dort haben Sie jetzt die Möglichkeit die Serverinformationen eintzutragen.</li>
+                                                    <li>Alternativ können Sie die Serverinformationen dauerhaft in der Datei <code>/config.php</code> eintragen.</li>
+                                                </ul>
+                                                Hier finden Sie <a href="https://github.com/altheeagle/siteguard-auswertung/">weitere Informationen</a> zu dieser Meldung.',
+                            'websitetitle' => 'Fehler beim Login',
+                        ],[
+                            'statusCode' => 401,
+                            'redirectUrl' => '/',
+                            'autoRedirect' => false,
+                        ]);
+                }
+                $_SESSION["showServerConfigOptions"] = false;
+                $_SESSION["host"] = $emailserver[0]["hostname"];
+                $_SESSION["port"] = $emailserver[0]["port"];
+                $_SESSION["encryption"] = $emailserver[0]["socketType"];
+            }
+
+            if (isset($_POST["host"])){
+                $_SESSION["host"] = $_POST["host"];
+            }
+
+            if (isset($_POST["port"])){
+                $_SESSION["port"] = $_POST["port"];
+            }
+
+            if (isset($_POST["encryption"])){
+                $_SESSION["encryption"] = (bool)$_POST["encryption"];
+            }
+
+
+
+            $imap = new \netzgrenze\imap($post['username'], $post['password']);
+
+
             $loginresult = $imap->login();
 
             if ($loginresult){
+
+
                 $fields = [
                     'websitetitle' => 'Login erfolgreich',
                     'successTitle' => 'Login erfolgreich',
@@ -67,7 +114,7 @@ class router {
                     'websitetitle' => 'Fehler beim Login',
                 ],[
                     'statusCode' => 401,
-                    'redirectUrl' => 'history.back()',
+                    'redirectUrl' => '/',
                 ]);
             }
 
