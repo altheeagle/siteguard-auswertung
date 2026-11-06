@@ -22,7 +22,7 @@
     if ($_POST) {
         $response = netzgrenze\router::POST($path, $_POST);
     } else {
-        $response = netzgrenze\router::GET($path, $_GET);
+        $response = netzgrenze\router::GET($path);
     }
 
     echo $response;
