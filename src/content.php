@@ -250,12 +250,11 @@ class content {
 	}
 
 	/**
-	 * Erzeigt die Startseite nach der Anmeldung
+	 * Erzeugt die Hauptseite nach der Anmeldung
 	 *
-	 *
-	 *
+	 * @return string Die Hauptseite als HTML.
 	 */
-	public static function makeStartpage(){
+	public static function makeMainpage(){
 
         $config = require_once 'config.php';
 
@@ -263,7 +262,7 @@ class content {
         $content = file_get_contents('html/hauptseite.html');
         $fields = [
             'websitetitle' => 'Startseite',
-            'sessionUsername' => $_SESSION['username'],
+            'sessionUsername' => \htmlspecialchars($_SESSION['username']),
             'foldername' => $config["foldername"],
             'sessionMsg' => implode("\n", $_SESSION['msg']),
             'siteguardMails' => self::makeAccordion($imap->getAllSiteGaurdMails()),
@@ -272,13 +271,22 @@ class content {
         return \netzgrenze\content::composePage($content, $fields);
     }
 
+	/**
+	 * Erzeugt die Loginseite
+	 *
+	 * @return string Die Loginseite als HTML.
+	 */
     public static function makeLogin(){
         $content = file_get_contents('html/login.html');
         $fields["csrf_token"] = $_SESSION["csrf_token"];
         return \netzgrenze\content::composePage($content, $fields);
     }
 
-
+	/**
+	 * Erzeugt ein Bootstrap Accordion aus dem Betreffszeilen der Mails
+	 *
+	 * @return string Das Akkordion als HTML.
+	 */
     public static function makeAccordion($mails){
 
     if (count($mails) == 0){
@@ -308,8 +316,18 @@ class content {
         return $html;
     }
 
+	/**
+	 *	Erzeigt aus dem Textbody der Mail ein Array mit den
+	 *  einzelnen Vorgängen
+	 *
+	 *	@return array [
+	 			'datum' => Datum und Uhrzeit des Vorgangs,
+				'script' => Script/Programm das den Vorgang ausgeführt hat
+				'datei' => Datei die vom Vorgang betroffen ist
+				'vorgang' => Operation die durchgeführt wurde (create, unlink, read, ...)
+				]
+	 */
 	public static function body2Array(string $body){
-
         $body = str_replace(["\r\n", "\r"], "\n", $body);
 
 
