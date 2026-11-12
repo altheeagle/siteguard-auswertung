@@ -5,7 +5,7 @@ namespace netzgrenze;
 use Webklex\PHPIMAP\ClientManager;
     class imap {
         protected $client;
-        protected $config;
+        public $config;
         protected $username;
         protected $password;
 
@@ -283,8 +283,73 @@ use Webklex\PHPIMAP\ClientManager;
             return $pass === false ? null : $pass;
         }
 
+        public static function getAutoconfigData($email) {
+            $domain = substr(strrchr($email, "@"), 1);
+            if (!$domain) return false;
+
+            // Die beiden standardisierten Mozilla-Endpunkte
+            $urls = [
+                "http://autoconfig.{$domain}/mail/config-v1.1.xml?emailaddress=" . urlencode($email),
+                "http://{$domain}/.well-known/autoconfig/mail/config-v1.1.xml?emailaddress=" . urlencode($email)
+            ];
+
+            foreach ($urls as $url) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Wichtig, da oft von http auf https weitergeleitet wird
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                if ($httpCode === 200 && $response) {
+                    return self::parseAutoconfigXML($response);
+                }
+            }
+
+            return false;
+        }
+
+        private static function parseAutoconfigXML($xmlString) {
+            // Unterdrückt Warnungen, falls das XML fehlerhaft ist
+            $xml = @simplexml_load_string($xmlString);
+            if (!$xml || !isset($xml->emailProvider)) return false;
+
+            $results = [];
+
+            // 1. Posteingangsserver auslesen (IMAP / POP3)
+            foreach ($xml->emailProvider->incomingServer as $server) {
+                if (\mb_strtolower((string)$server['type']) == 'imap'){
+
+
+                    $socketType = \mb_strtolower((string)$server->socketType);
+
+                    if (!in_array(\mb_strtolower((string)$server->socketType),["ssl","tls","starttls"])){
+                        $socketType = "false";
+                    }
+
+                    // if (in_array(\mb_strtolower((string)$server->authentication),["ssl","tls","starttls","notls","false"])){
+                    //     $socketType = \mb_strtolower((string)$server->socketType);
+                    // }
+
+
+
+                    $results[] = [
+                        'type'           => (string)$server['type'], // imap oder pop3
+                        'hostname'       => (string)$server->hostname,
+                        'port'           => (int)$server->port,
+                        'socketType'     => $socketType, // SSL, STARTTLS oder plain
+                        'authentication' => (string)$server->authentication, // password-cleartext, OAuth2 etc.
+                    ];
+                }
+            }
+
+            if (empty($results)) return false;
+            return $results;
+        }
     }
-
-
 
 ?>
