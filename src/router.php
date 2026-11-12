@@ -30,20 +30,20 @@ class router {
     public static function POST(string $path, array $post){
 
         if ($path == 'login'){
-            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-                http_response_code(405); // Oder 403 Forbidden
-                die('Ungültiger CSRF-Token!');
-            }
+            // if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+            //     http_response_code(405); // Oder 403 Forbidden
+            //     die('Ungültiger CSRF-Token!');
+            // }
 
             $config = require "config.php";
 
-            \netzgrenze\utils::clog("$post: " . \json_encode($post));
+            // \netzgrenze\utils::clog("$post: " . \json_encode($post));
 
             // E-Mail Server Daten ermitteln
             if (empty($_SESSION["host"]) && empty($config["host"]) && empty($post["host"])) {
-                \netzgrenze\utils::clog("Autoconfig wird gesucht");
+                // \netzgrenze\utils::clog("Autoconfig wird gesucht");
                 $emailserver = \netzgrenze\imap::getAutoconfigData($post['username']);
-                \netzgrenze\utils::clog(\json_encode($emailserver));
+                // \netzgrenze\utils::clog(\json_encode($emailserver));
                 if (!$emailserver){
                     $_SESSION["showServerConfigOptions"] = true;
                     return \netzgrenze\content::showError([
