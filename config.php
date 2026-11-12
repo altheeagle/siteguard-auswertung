@@ -5,7 +5,8 @@
         // wird er angelegt.
 
         // <delimiter> ersetzt das serverspezifische Trenn-
-        // zeichen und muss genau so eingesetzt werden
+        // zeichen und muss genau so eingesetzt werden wie
+        // in den Beispielen.
         // Beispiele:
         //
         //  "foldername" => "SiteGuard",
@@ -21,7 +22,7 @@
         //
 
 
-        "foldername" => "Strato2<delimiter>SiteGuard",
+        "foldername" => "SiteGuard",
 
         // Sollen die abgelegten Mails als gelesen markiert werden
         "marAsRead" => true,
