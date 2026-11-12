@@ -12,13 +12,7 @@ class router {
             }
         }
 
-        if ($path == 'logout'){
-            $imap = new \netzgrenze\imap();
-            $imap->logout();
-            header("Location: /");
-            \session_destroy();
-            exit();
-        }
+
 
         if (preg_match('#^api/getMail(?:/(\d+))?/?$#', $path, $matches)){
             $imap = new \netzgrenze\imap();
@@ -120,6 +114,20 @@ class router {
             }
 
 
+        }
+
+        if ($path == 'logout'){
+
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                http_response_code(405); // Oder 403 Forbidden
+                die('Ungültiger CSRF-Token!');
+            }
+
+            $imap = new \netzgrenze\imap();
+            $imap->logout();
+            header("Location: /");
+            \session_destroy();
+            exit();
         }
 
         if ($path == "api/moveMail"){
