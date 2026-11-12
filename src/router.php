@@ -67,16 +67,25 @@ class router {
                 $_SESSION["encryption"] = $emailserver[0]["socketType"];
             }
 
-            if (isset($_POST["host"])){
+            if ($_POST["host"] !== ""){
                 $_SESSION["host"] = $_POST["host"];
             }
 
-            if (isset($_POST["port"])){
+            if ($_POST["port"] !== ""){
                 $_SESSION["port"] = $_POST["port"];
             }
 
-            if (isset($_POST["encryption"])){
-                $_SESSION["encryption"] = (bool)$_POST["encryption"];
+            if ($_POST["encryption"] !== ""){
+                switch ($_POST["encryption"]) {
+                    case 'on':
+                        $encryption = 'ssl';
+                        break;
+
+                    default:
+                        $encryption = 'none';
+                        break;
+                }
+                $_SESSION["encryption"] = $encryption;
             }
 
 
