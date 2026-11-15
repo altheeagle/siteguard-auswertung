@@ -90,7 +90,7 @@ function formatVorgaenge(vorgaenge, id, gesamtzahl) {
     if (gesamtzahl >= 499){
         html += '<div class="alert alert-warning" role="alert">Pro E-Mail werden offensichtlich nicht mehr als 499 Dateioperationen verschickt. Daher können Dateioperationen stattgefunden haben die hier nicht aufgelistet sind.</div>';
     }
-    html += '</p><p>Dateien die während des Logging Zeitraums sowohl erstellt <code>(create)</code> als auch gelöscht <code>(unlink)</code> wurden, werden mit dem Symbol 🗑️ gekennzeichnet.</p><button class="btn btn-sm btn-outline-secondary mb-3" onclick="toggleDeleted(' + id + ')" id="toggleDeletedBtn">' + geloeschtCounter + ' gelöschte Dateien (🗑️) ausblenden</button>';
+    html += '</p><p>Dateien die während des Logging Zeitraums sowohl erstellt <code>(create)</code> als auch gelöscht <code>(unlink)</code> wurden, werden mit dem Symbol 🗑️ gekennzeichnet.</p><button class="btn btn-sm btn-outline-secondary mb-3" onclick="toggleDeleted(' + id + ')" id="toggleDeletedBtn" data-geloeschtCounter="' + geloeschtCounter + '">' + geloeschtCounter + ' gelöschte Dateien (🗑️) ausblenden</button>';
     html += '<p>Die Vorgänge sind nach Datei gruppiert.</p>'
     html += '<table class="table table-striped table-sm" id="vorgaengeTable' + id + '">';
     html += '  <thead>';
@@ -220,7 +220,8 @@ function toggleDeleted(id){
     const table = document.getElementById("vorgaengeTable" + id);
     const rows = table.getElementsByTagName("tr");
     toggleDeletedBtn = document.getElementById("toggleDeletedBtn");
-    toggleDeletedBtn.innerHTML = toggleDeletedBtn.innerHTML.includes("ausblenden") ? "Gelöschte Dateien (🗑️) einblenden" : "Gelöschte Dateien (🗑️) ausblenden";
+    geloeschtCounter = toggleDeletedBtn.getAttribute("data-geloeschtCounter");
+    toggleDeletedBtn.innerHTML = toggleDeletedBtn.innerHTML.includes("ausblenden") ? geloeschtCounter + " gelöschte Dateien (🗑️) einblenden" : geloeschtCounter +" gelöschte Dateien (🗑️) ausblenden";
     for (let i = 1; i < rows.length; i++) { // Start from 1 to skip the header row
         const cells = rows[i].getElementsByTagName("td");
         if (cells.length > 0) {
