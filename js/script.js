@@ -80,14 +80,18 @@ function parseDatum(str) {
 
 
 function formatVorgaenge(vorgaenge, id, gesamtzahl) {
+    let geloeschtCounter = Object.values(vorgaenge).reduce((counter,vorgang) => {
+        (vorgang.geloescht === true) ? counter++: 0;
+        return counter
+    }, 0);
     let html = '';
     html += '<p>Es wurden <strong>' + vorgaenge.length + '</strong> Dateien erstellt/gelesen/gelöscht/geändert. ';
     html += 'Ingesammt wurden ' + gesamtzahl + ' Dateieoperationen protokolliert.';
     if (gesamtzahl >= 499){
         html += '<div class="alert alert-warning" role="alert">Pro E-Mail werden offensichtlich nicht mehr als 499 Dateioperationen verschickt. Daher können Dateioperationen stattgefunden haben die hier nicht aufgelistet sind.</div>';
     }
-    html += 'Dateien die während des Logging Zeitraums sowohl erstellt <code>(create)</code> als auch gelöscht <code>(unlink)</code> wurden, werden mit dem Symbol 🗑️ gekennzeichnet. <button class="btn btn-sm btn-outline-secondary" onclick="toggleDeleted(' + id + ')" id="toggleDeletedBtn">Gelöschte Dateien (🗑️) ausblenden</button></p>';
-    html += '</p><p>Die Vorgänge sind nach Datei gruppiert.</p>'
+    html += '</p><p>Dateien die während des Logging Zeitraums sowohl erstellt <code>(create)</code> als auch gelöscht <code>(unlink)</code> wurden, werden mit dem Symbol 🗑️ gekennzeichnet.</p><button class="btn btn-sm btn-outline-secondary mb-3" onclick="toggleDeleted(' + id + ')" id="toggleDeletedBtn">' + geloeschtCounter + ' gelöschte Dateien (🗑️) ausblenden</button>';
+    html += '<p>Die Vorgänge sind nach Datei gruppiert.</p>'
     html += '<table class="table table-striped table-sm" id="vorgaengeTable' + id + '">';
     html += '  <thead>';
     html += '      <tr>';
