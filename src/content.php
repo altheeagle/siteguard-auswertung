@@ -285,7 +285,7 @@ class content {
         $fields["csrf_token"] = $_SESSION["csrf_token"];
 
 		$opendetails = '';
-		if ($_SESSION["showServerConfigOptions"]){
+		if (isset($_SESSION["showServerConfigOptions"]) && $_SESSION["showServerConfigOptions"]){
 			$opendetails = 'open';
 		}
 
