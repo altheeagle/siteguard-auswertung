@@ -79,6 +79,10 @@ class content {
 
 		$fields["csrf_token"] = $_SESSION['csrf_token'];
 
+		$info = json_decode(file_get_contents(__DIR__ . '/version.json'), true);
+
+		$fields["version"] = "Version: Build {$info['build']} ({$info['date']})";
+
 		$content = content::replace_placeholder(
 			file_get_contents('html/header.html')
 			. $content
